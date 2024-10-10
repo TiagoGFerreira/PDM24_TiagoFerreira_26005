@@ -55,12 +55,56 @@ fun CreateButton(text: String, onClick: () -> Unit, backGroundColors: ButtonColo
 fun Calculator() {
 
     var displayValue by remember { mutableStateOf("0") }
+    var currentValue by remember { mutableStateOf("") }
+    var previousValue by remember { mutableStateOf(" ") }
+    var operation by remember { mutableStateOf("") }
 
     fun onButtonClick(value: String) {
-        if (displayValue == "0") {
-            displayValue = value.toString()
+        if (displayValue == "0" && value != ".") {
+            displayValue = value
+            currentValue = value
         } else {
             displayValue += value
+            currentValue += value
+        }
+    }
+
+    fun clear() {
+        displayValue = "0"
+        currentValue = ""
+        previousValue = ""
+        operation = ""
+    }
+
+    fun clearEntry() {
+        displayValue = displayValue.dropLast(1)
+        if (displayValue.isEmpty()) {
+            displayValue = "0"
+        }
+        currentValue = displayValue
+    }
+
+    fun setOperation(op: String) {
+        if (currentValue.isNotEmpty()) {
+            previousValue = currentValue
+            currentValue = ""
+            operation = op
+        }
+    }
+
+    fun calculateResult() {
+        if (previousValue.isNotEmpty() && currentValue.isNotEmpty()) {
+            val result = when (operation) {
+                "+" -> previousValue.toDouble() + currentValue.toDouble()
+                "-" -> previousValue.toDouble() - currentValue.toDouble()
+                "x" -> previousValue.toDouble() * currentValue.toDouble()
+                "÷" -> previousValue.toDouble() / currentValue.toDouble()
+                else -> displayValue.toDouble()
+            }
+            displayValue = result.toString()
+            currentValue = ""
+            previousValue = ""
+            operation = ""
         }
     }
 
@@ -90,7 +134,7 @@ fun Calculator() {
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
             CreateButton("M+", onClick = { },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-            CreateButton("C", onClick = { },
+            CreateButton("C", onClick = { clear() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White))
         }
 
@@ -104,7 +148,7 @@ fun Calculator() {
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
             CreateButton("±", onClick = { },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-            CreateButton("CE", onClick = { },
+            CreateButton("CE", onClick = { clearEntry() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White))
         }
 
@@ -141,18 +185,18 @@ fun Calculator() {
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Gray, contentColor = Color.White))
                 CreateButton("3", onClick = { onButtonClick("3") },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Gray, contentColor = Color.White))
-                CreateButton("=", onClick = { },
+                CreateButton("=", onClick = { calculateResult() },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Gray, contentColor = Color.White))
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                CreateButton("÷", onClick = { },
+                CreateButton("÷", onClick = { setOperation("÷") },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-                CreateButton("x", onClick = { },
+                CreateButton("x", onClick = { setOperation("x") },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-                CreateButton("-", onClick = { },
+                CreateButton("-", onClick = { setOperation("-") },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-                CreateButton("+", onClick = { },
+                CreateButton("+", onClick = { setOperation("+") },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
             }
         }
