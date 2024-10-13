@@ -7,12 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -30,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.sqrt
 import com.example.calculator.ui.theme.CalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,14 +56,23 @@ fun Calculator() {
     var currentValue by remember { mutableStateOf("") }
     var previousValue by remember { mutableStateOf(" ") }
     var operation by remember { mutableStateOf("") }
+    var isNewValue by remember { mutableStateOf(false) }
 
     fun onButtonClick(value: String) {
         if (displayValue == "0" && value != ".") {
             displayValue = value
             currentValue = value
         } else {
-            displayValue += value
-            currentValue += value
+            if (isNewValue)
+            {
+                displayValue = value
+                currentValue += value
+            }
+            else
+            {
+                displayValue += value
+                currentValue += value
+            }
         }
     }
 
@@ -89,6 +96,23 @@ fun Calculator() {
             previousValue = currentValue
             currentValue = ""
             operation = op
+            isNewValue = true
+        }
+    }
+
+    fun calculatePercentage(){
+        if(displayValue.isNotEmpty())
+        {
+            val result = displayValue.toDouble() /  100
+            displayValue = result.toString()
+        }
+    }
+
+    fun calculateSquareRoot(){
+        if(displayValue.isNotEmpty())
+        {
+            val result = sqrt(displayValue.toDouble())
+            displayValue = result.toString()
         }
     }
 
@@ -99,10 +123,15 @@ fun Calculator() {
                 "-" -> previousValue.toDouble() - currentValue.toDouble()
                 "x" -> previousValue.toDouble() * currentValue.toDouble()
                 "÷" -> previousValue.toDouble() / currentValue.toDouble()
+                "√" -> sqrt(displayValue.toDouble())
                 else -> displayValue.toDouble()
             }
+            if((result % 0.1).toInt() == 0)
+            {
+                result.toInt()
+            }
             displayValue = result.toString()
-            currentValue = ""
+            currentValue = result.toString()
             previousValue = ""
             operation = ""
         }
@@ -142,11 +171,11 @@ fun Calculator() {
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CreateButton("√", onClick = { },
+            CreateButton("√", onClick = { calculateSquareRoot() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-            CreateButton("%", onClick = { },
+            CreateButton("%", onClick = { calculatePercentage() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
-            CreateButton("±", onClick = { },
+            CreateButton("±", onClick = { if(!currentValue.contains("-")) onButtonClick("-") },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
             CreateButton("CE", onClick = { clearEntry() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Red, contentColor = Color.White))
