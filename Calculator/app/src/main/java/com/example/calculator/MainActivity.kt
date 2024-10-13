@@ -54,19 +54,23 @@ fun Calculator() {
 
     var displayValue by remember { mutableStateOf("0") }
     var currentValue by remember { mutableStateOf("") }
-    var previousValue by remember { mutableStateOf(" ") }
     var operation by remember { mutableStateOf("") }
     var isNewValue by remember { mutableStateOf(false) }
+    var values by remember { mutableStateOf(emptyList<String>()) }
+    val mutableValues = values.toMutableList()
+    var operations by remember { mutableStateOf(emptyList<String>()) }
+    val mutableOperations = operations.toMutableList()
 
     fun onButtonClick(value: String) {
-        if (displayValue == "0" && value != ".") {
+        if (displayValue == "0") {
             displayValue = value
             currentValue = value
         } else {
-            if (isNewValue)
+            if (isNewValue && value != ".")
             {
                 displayValue = value
                 currentValue += value
+                isNewValue = false
             }
             else
             {
@@ -79,7 +83,6 @@ fun Calculator() {
     fun clear() {
         displayValue = "0"
         currentValue = ""
-        previousValue = ""
         operation = ""
     }
 
@@ -93,10 +96,13 @@ fun Calculator() {
 
     fun setOperation(op: String) {
         if (currentValue.isNotEmpty()) {
-            previousValue = currentValue
+            mutableOperations.add(op)
+            mutableValues.add(currentValue)
+            values = mutableValues.toList()
+            operations = mutableOperations.toList()
             currentValue = ""
-            operation = op
             isNewValue = true
+
         }
     }
 
@@ -117,24 +123,35 @@ fun Calculator() {
     }
 
     fun calculateResult() {
-        if (previousValue.isNotEmpty() && currentValue.isNotEmpty()) {
-            val result = when (operation) {
-                "+" -> previousValue.toDouble() + currentValue.toDouble()
-                "-" -> previousValue.toDouble() - currentValue.toDouble()
-                "x" -> previousValue.toDouble() * currentValue.toDouble()
-                "÷" -> previousValue.toDouble() / currentValue.toDouble()
-                "√" -> sqrt(displayValue.toDouble())
-                else -> displayValue.toDouble()
+        if (mutableValues.isEmpty() || mutableOperations.isEmpty()) return
+
+
+        mutableValues.add(currentValue)
+        var result = mutableValues[0].toDouble()
+
+        for (i in 0 until mutableOperations.size) {
+            val op = mutableOperations[i]
+            if (i + 1 < mutableValues.size) {
+                val nextValue = mutableValues[i + 1].toDouble()
+
+                result = when (op) {
+                    "+" -> result + nextValue
+                    "-" -> result - nextValue
+                    "x" -> result * nextValue
+                    "÷" -> result / nextValue
+                    else -> result
+                }
             }
-            if((result % 0.1).toInt() == 0)
-            {
-                result.toInt()
-            }
-            displayValue = result.toString()
-            currentValue = result.toString()
-            previousValue = ""
-            operation = ""
         }
+
+        displayValue = if (result % 1 == 0.0) {
+            result.toInt().toString()
+        } else {
+            result.toString()
+        }
+        currentValue = result.toString()
+        mutableValues.clear()
+        mutableOperations.clear()
     }
 
     Column(
