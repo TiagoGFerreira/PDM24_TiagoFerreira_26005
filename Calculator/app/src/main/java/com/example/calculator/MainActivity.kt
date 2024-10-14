@@ -56,13 +56,14 @@ fun Calculator() {
     var currentValue by remember { mutableStateOf("") }
     var operation by remember { mutableStateOf("") }
     var isNewValue by remember { mutableStateOf(false) }
+    var isNewList by remember { mutableStateOf(false) }
     var values by remember { mutableStateOf(emptyList<String>()) }
     val mutableValues = values.toMutableList()
     var operations by remember { mutableStateOf(emptyList<String>()) }
     val mutableOperations = operations.toMutableList()
 
     fun onButtonClick(value: String) {
-        if (displayValue == "0") {
+        if (displayValue == "0" && value != ".") {
             displayValue = value
             currentValue = value
         } else {
@@ -96,6 +97,12 @@ fun Calculator() {
 
     fun setOperation(op: String) {
         if (currentValue.isNotEmpty()) {
+            if(isNewList)
+            {
+                mutableValues.clear()
+                mutableOperations.clear()
+                isNewList = false
+            }
             mutableOperations.add(op)
             mutableValues.add(currentValue)
             values = mutableValues.toList()
@@ -127,6 +134,8 @@ fun Calculator() {
 
 
         mutableValues.add(currentValue)
+
+
         var result = mutableValues[0].toDouble()
 
         for (i in 0 until mutableOperations.size) {
@@ -150,8 +159,7 @@ fun Calculator() {
             result.toString()
         }
         currentValue = result.toString()
-        mutableValues.clear()
-        mutableOperations.clear()
+        isNewList = true
     }
 
     Column(
@@ -165,7 +173,6 @@ fun Calculator() {
         Text(
             text = displayValue,
             modifier = Modifier
-                 .wrapContentWidth(Alignment.End)
                 .padding(1.dp),
             fontSize = 32.sp,
             textAlign = TextAlign.Right
@@ -188,7 +195,7 @@ fun Calculator() {
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CreateButton("√", onClick = { calculateSquareRoot() },
+            CreateButton("√", onClick = {    calculateSquareRoot() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
             CreateButton("%", onClick = { calculatePercentage() },
                 backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White))
