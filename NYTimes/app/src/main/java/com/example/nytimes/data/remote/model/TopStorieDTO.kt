@@ -1,15 +1,15 @@
 package com.example.nytimes.data.remote.model
 
-data class TopStorie(
-    val section : String,
-    val subsection : String,
+import com.example.nytimes.domain.model.TopStorie
+
+data class TopStorieDTO(
+    val id : Int,
     val title : String,
-    val abstract : String,
-    val url : String,
-    val byline : String
+    val text : String,
+    val summary : String,
 ) {
     fun toTopStorie(): TopStorie {
-        return TopStorie(section = section, subsection = subsection, title  = title,
-            abstract = abstract, url = url, byline = byline)
+        return TopStorie(id = id, title = title, text  = text,
+            summary = summary)
     }
 }

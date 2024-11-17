@@ -1,4 +1,8 @@
 package com.example.nytimes.domain.model
 
-class TopStorie {
-}
+data class TopStorie (
+    val id : Int,
+    val title : String,
+    val text : String,
+    val summary : String,
+)
