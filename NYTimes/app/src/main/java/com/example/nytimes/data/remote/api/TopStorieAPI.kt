@@ -1,5 +1,6 @@
 package com.example.nytimes.data.remote.api
 
+import com.example.nytimes.data.remote.model.TopStorie
 import com.example.nytimes.data.remote.model.TopStorieDto
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,5 +21,5 @@ interface TopStoriesApi {
     @GET("svc/topstories/v2/home.json")
     suspend fun getTopStories(
         @Query("api-key") apiKey: String
-    ): List<TopStoriesDto>
+    ): List<TopStorieDTO>
 }

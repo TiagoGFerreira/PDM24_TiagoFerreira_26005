@@ -1,6 +1,6 @@
 package com.example.nytimes.data.remote.model
 
-data class TopStorieDto(
+data class TopStorie(
     val section : String,
     val subsection : String,
     val title : String,
