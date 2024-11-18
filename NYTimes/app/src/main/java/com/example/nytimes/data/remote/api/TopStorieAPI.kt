@@ -31,5 +31,5 @@ interface TopStoriesApi {
         @Query("api-key") apiKey: String,
         @Path("source-country") srccountry: String,
         @Path("language") language: String
-    ): List<TopStorieDetailDTO>
+    ): TopStorieDetailDTO
 }

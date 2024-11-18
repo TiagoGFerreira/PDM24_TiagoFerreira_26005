@@ -11,6 +11,6 @@ class GetTopStoriesUseCase(private val repository: TopStorieRepository) {
 }
 
 class GetTopStoriesDetailUseCase(private val repository: TopStorieRepository) {
-    suspend operator fun invoke(topStorieId: String, language: String, srccountry: String) : List<TopStorieDetail> {
+    suspend operator fun invoke(topStorieId: String, language: String, srccountry: String) : TopStorieDetail? {
         return repository.getTopStoriesDetail(topStorieId,language,srccountry)
     }}

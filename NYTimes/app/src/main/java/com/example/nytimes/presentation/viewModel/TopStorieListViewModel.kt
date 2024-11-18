@@ -1,4 +1,4 @@
-package com.example.nytimes.presentation.coin_list
+package com.example.nytimes.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

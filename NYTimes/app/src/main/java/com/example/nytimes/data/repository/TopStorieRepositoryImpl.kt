@@ -12,7 +12,7 @@ class TopStorieRepositoryImpl (private val api: TopStoriesApi) : TopStorieReposi
         return api.getTopStories("G1WZhzILeXYYS658VlOgrvD6jbR1Aa2H","us","en").map { it.toTopStorie() }
     }
 
-    override suspend fun getTopStoriesDetail(topStorieId: String, language: String, srccountry: String): List<TopStorieDetail> {
+    override suspend fun getTopStoriesDetail(topStorieId: String, language: String, srccountry: String): TopStorieDetail {
         return api.getTopStorieDetail(topStorieId,language,srccountry).toTopStorieDetail()
     }
 }

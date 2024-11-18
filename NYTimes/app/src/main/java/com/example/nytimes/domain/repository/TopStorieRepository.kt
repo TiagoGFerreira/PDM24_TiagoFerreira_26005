@@ -5,5 +5,5 @@ import com.example.nytimes.domain.model.TopStorieDetail
 
 interface TopStorieRepository {
     suspend fun getTopStories(): List<TopStorie>
-    suspend fun getTopStoriesDetail(topStorieId: String, language: String, srccountry: String) : List<TopStorieDetail>
+    suspend fun getTopStoriesDetail(topStorieId: String, language: String, srccountry: String) : TopStorieDetail
 }
