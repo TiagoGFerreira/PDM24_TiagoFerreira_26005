@@ -1,6 +1,5 @@
 package com.example.nytimes.data.remote.model
 
-import com.example.nytimes.domain.model.TopStorie
 import com.example.nytimes.domain.model.TopStorieDetail
 
 data class TopStorieDetailDTO(

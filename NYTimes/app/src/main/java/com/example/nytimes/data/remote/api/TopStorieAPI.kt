@@ -1,7 +1,7 @@
 package com.example.nytimes.data.remote.api
 
-import com.example.nytimes.data.remote.model.TopStorieDTO
 import com.example.nytimes.data.remote.model.TopStorieDetailDTO
+import com.example.nytimes.domain.model.TopNewsResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -19,17 +19,17 @@ object RetrofitInstance {
 }
 
 interface TopStoriesApi {
-    @GET("top-news")
+    @GET("top-news/")
     suspend fun getTopStories(
         @Query("api-key") apiKey: String,
-        @Path("source-country") srccountry: String,
-        @Path("language") language: String
-    ): List<TopStorieDTO>
+        @Query("source-country") sourceCountry: String,
+        @Query("language") language: String
+    ): TopNewsResponse
 
     @GET("top-news/{id}")
     suspend fun getTopStorieDetail(
-        @Query("api-key") apiKey: String,
         @Path("source-country") srccountry: String,
-        @Path("language") language: String
+        @Path("language") language: String,
+        @Query("api-key") apiKey: String,
     ): TopStorieDetailDTO
 }
