@@ -4,12 +4,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.nytimes.domain.model.NewsItem
 import com.example.nytimes.presentation.viewModel.TopStorieListViewModel
 
@@ -21,19 +25,42 @@ fun TopStorieListScreen(viewModel: TopStorieListViewModel, onItemClick: (Int) ->
         viewModel.fetchTopStorie()
     }
 
-    if (stories.isEmpty()) {
-        Text("Loading stories...")
-    } else {
-        LazyColumn {
-            items(stories) { story ->
-                TopStorieItem(story = story, onClick = { onItemClick(story.id) })
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Top Stories",
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        if (stories.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Loading stories...",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            LazyColumn {
+                items(stories) { story ->
+                    TopStorieItem(story = story, onClick = { onItemClick(story.id) })
+                    Divider(
+                        color = Color.LightGray,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
             }
         }
     }
 }
-
-
-
 
 @Composable
 fun TopStorieItem(story: NewsItem, onClick: () -> Unit) {
@@ -43,9 +70,32 @@ fun TopStorieItem(story: NewsItem, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(8.dp)
     ) {
-        Text(text = story.title)
+        Text(
+            text = story.title,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            ),
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        if (story.author.isNotBlank()) {
+            Text(
+                text = "By ${story.author}",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Gray
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         if (!story.summary.isNullOrBlank()) {
-            Text(text = story.summary, modifier = Modifier.padding(top = 4.dp))
+            Text(
+                text = story.summary,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
         }
     }
 }

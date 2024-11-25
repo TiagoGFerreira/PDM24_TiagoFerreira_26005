@@ -2,11 +2,10 @@ package com.example.nytimes.data.repository
 
 import android.util.Log
 import com.example.nytimes.data.remote.api.TopStoriesApi
-import com.example.nytimes.domain.model.TopStorieDetail
-import com.example.nytimes.domain.repository.TopStorieRepository
 import com.example.nytimes.data.remote.model.TopStorieDetailDTO
+import com.example.nytimes.domain.repository.TopStorieRepository
 import com.example.nytimes.domain.model.NewsItem
-import org.intellij.lang.annotations.Language
+import com.example.nytimes.domain.model.SingleNews
 
 class TopStorieRepositoryImpl (private val api: TopStoriesApi) : TopStorieRepository {
     override suspend fun getTopStories(): List<NewsItem> {
@@ -21,7 +20,23 @@ class TopStorieRepositoryImpl (private val api: TopStoriesApi) : TopStorieReposi
     }
 
 
-    override suspend fun getTopStoriesDetail(topStorieId: String, language: String, srccountry: String): TopStorieDetail {
-        return api.getTopStorieDetail(topStorieId,language,srccountry).toTopStorieDetail()
+    override suspend fun getTopStoriesDetail(topStorieId: Int, apikey: String): SingleNews {
+        try {
+            val response = api.getTopStorieDetail(topStorieId, apikey)
+
+            val firstNews = response.news.firstOrNull()
+
+            if (firstNews != null) {
+                return firstNews.toTopStorieDetail()
+            } else {
+                throw Exception("No news found for the given ID.")
+            }
+        } catch (e: Exception) {
+            Log.e("Error", "Error fetching details: ${e.message}")
+            throw e
+        }
     }
+
+
+
 }

@@ -11,6 +11,6 @@ data class TopNewsItem(
 data class NewsItem(
     val id: Int,
     val title: String,
-    val text: String?,
-    val summary: String?
+    val summary: String,
+    val author: String
 )

@@ -1,6 +1,8 @@
 package com.example.nytimes.data.remote.api
 
+import com.example.nytimes.data.remote.model.SingleNewsItemDTO
 import com.example.nytimes.data.remote.model.TopStorieDetailDTO
+import com.example.nytimes.domain.model.SingleNews
 import com.example.nytimes.domain.model.TopNewsResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -26,10 +28,9 @@ interface TopStoriesApi {
         @Query("language") language: String
     ): TopNewsResponse
 
-    @GET("top-news/{id}")
+    @GET("retrieve-news")
     suspend fun getTopStorieDetail(
-        @Path("source-country") srccountry: String,
-        @Path("language") language: String,
+        @Query("ids") topStorieId: Int,
         @Query("api-key") apiKey: String,
-    ): TopStorieDetailDTO
+    ): SingleNewsItemDTO
 }
