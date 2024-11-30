@@ -1,6 +1,5 @@
 package com.example.nytimes.presentation.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nytimes.data.remote.api.RetrofitInstance
@@ -14,16 +13,13 @@ class TopStorieListViewModel : ViewModel() {
     private val api = RetrofitInstance.api
     private val repository = TopStorieRepositoryImpl(api)
     private val getTopStorieUseCase = GetTopStoriesUseCase(repository)
+    private val apikey = "e35283d0696b465bbd3cefc5ee783934"
 
     val topstorie = MutableStateFlow<List<NewsItem>>(emptyList())
-    fun fetchTopStorie() {
+    fun fetchTopStorie(source : String, language : String) {
         viewModelScope.launch {
-            try {
-                val stories = getTopStorieUseCase()
+                val stories = getTopStorieUseCase(apikey,source,language)
                 topstorie.value = stories
-            } catch (e: Exception) {
-                topstorie.value = emptyList()
-            }
         }
     }
 }

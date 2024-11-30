@@ -1,10 +1,10 @@
 package com.example.nytimes.domain.model
 
-data class SingleNewsItem(
-    val news: List<SingleNews>
+data class NewsDetailList(
+    val news: List<NewsDetail>
 )
 
-data class SingleNews(
+data class NewsDetail(
     val id: Int,
     val title: String,
     val text: String,

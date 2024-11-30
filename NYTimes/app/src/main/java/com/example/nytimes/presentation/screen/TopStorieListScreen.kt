@@ -18,11 +18,11 @@ import com.example.nytimes.domain.model.NewsItem
 import com.example.nytimes.presentation.viewModel.TopStorieListViewModel
 
 @Composable
-fun TopStorieListScreen(viewModel: TopStorieListViewModel, onItemClick: (Int) -> Unit) {
+fun TopStorieListScreen(viewModel: TopStorieListViewModel, source : String, language : String,onItemClick: (Int) -> Unit) {
     val stories = viewModel.topstorie.collectAsState().value
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchTopStorie()
+    LaunchedEffect(source,language) {
+        viewModel.fetchTopStorie(source,language)
     }
 
     Column(

@@ -24,7 +24,7 @@ fun TopStorieDetailListScreen(
     val storyDetail = viewModel.topStorieDetail.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchTopStorieDetail(topStorieId, "e35283d0696b465bbd3cefc5ee783934")
+        viewModel.fetchTopStorieDetail(topStorieId)
     }
 
     storyDetail.value?.let { detail ->

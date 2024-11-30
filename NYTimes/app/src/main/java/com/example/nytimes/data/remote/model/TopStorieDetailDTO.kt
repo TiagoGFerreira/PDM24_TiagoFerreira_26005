@@ -1,6 +1,6 @@
 package com.example.nytimes.data.remote.model
 
-import com.example.nytimes.domain.model.SingleNews
+import com.example.nytimes.domain.model.NewsDetail
 
 data class TopStorieDetailDTO(
     val id: Int,
@@ -12,8 +12,8 @@ data class TopStorieDetailDTO(
     val publish_date: String,
     val author: String,
 ) {
-    fun toTopStorieDetail(): SingleNews {
-        return SingleNews(
+    fun toTopStorieDetail(): NewsDetail {
+        return NewsDetail(
             id = id,
             title = title,
             text = text,

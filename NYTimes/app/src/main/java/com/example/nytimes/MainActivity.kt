@@ -34,7 +34,7 @@ fun MainScreen() {
 
     if (selectedTopStorieId == null) {
         val topStorieListViewModel: TopStorieListViewModel = viewModel()
-        TopStorieListScreen(topStorieListViewModel) { topStorieId ->
+        TopStorieListScreen(topStorieListViewModel,"us","en") { topStorieId ->
             selectedTopStorieId = topStorieId
         }
     } else {
