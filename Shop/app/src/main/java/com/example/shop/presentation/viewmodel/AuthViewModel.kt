@@ -1,9 +1,10 @@
 package com.example.shop.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shop.domain.repository.AuthRepository
-import com.example.shop.data.repository.AuthRepositoryImpl.AuthState
+import com.example.shop.data.repository.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,16 +16,16 @@ class AuthViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    private val _authState  = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
     val authState: StateFlow<AuthState> = _authState
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                repository.loginUser(email, password)
-                _authState.emit(AuthState.Authenticated)
+                val state = repository.loginUser(email, password)
+                _authState.value = state
             } catch (e: Exception) {
-                _authState.emit(AuthState.Error(e.message ?: "Unknown error"))
+                _authState.value = AuthState.Error("Erro ao realizar login: ${e.message}")
             }
         }
     }
@@ -32,10 +33,10 @@ class AuthViewModel @Inject constructor(
     fun register(email: String, password: String) {
         viewModelScope.launch {
             try {
-                repository.registerUser(email, password)
-                _authState.emit(AuthState.Authenticated)
+                val state = repository.registerUser(email, password)
+                _authState.value = state
             } catch (e: Exception) {
-                _authState.emit(AuthState.Error(e.message ?: "Unknown error"))
+                _authState.value = AuthState.Error("Erro ao realizar registro: ${e.message}")
             }
         }
     }
@@ -43,7 +44,7 @@ class AuthViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             repository.signout()
-            _authState.emit(AuthState.Unauthenticated)
+            _authState.value = AuthState.Unauthenticated
         }
     }
 }
