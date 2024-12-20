@@ -10,6 +10,7 @@ import com.example.shop.presentation.view.LoginScreen
 import com.example.shop.presentation.view.RegisterScreen
 import com.example.shop.presentation.viewmodel.AuthViewModel
 import com.example.shop.data.repository.AuthState
+import com.example.shop.presentation.screen.CartScreen
 import com.example.shop.presentation.screen.HomeScreen
 import com.example.shop.presentation.viewmodel.ProductViewModel
 import com.example.shop.presentation.viewmodel.CartViewModel
@@ -29,7 +30,6 @@ fun AuthNavigation(
         is AuthState.Error -> "login"
     }) {
 
-        // Tela de login
         composable("login") {
             LoginScreen(
                 onLogin = { email, password -> authViewModel.login(email, password) },
@@ -38,7 +38,6 @@ fun AuthNavigation(
             )
         }
 
-        // Tela de registro
         composable("register") {
             RegisterScreen(
                 onRegister = { email, password -> authViewModel.register(email, password) },
@@ -47,14 +46,17 @@ fun AuthNavigation(
             )
         }
 
-        // Tela Home
         composable("home") {
             HomeScreen(
                 productViewModel = productViewModel,
-                onAddToCart = { product ->
-                    cartViewModel.addProductToCart(product)
-                },
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                onNavigateToCart = { navController.navigate("cart")},
+            )
+        }
+        composable("cart"){
+            CartScreen(
+                productViewModel = productViewModel,
+                cartViewModel = cartViewModel,
             )
         }
     }
