@@ -20,29 +20,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.shop.domain.model.Product
+import com.example.shop.presentation.viewmodel.AuthViewModel
 import com.example.shop.presentation.viewmodel.CartViewModel
 import com.example.shop.presentation.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    authViewModel: AuthViewModel,
     productViewModel: ProductViewModel,
     cartViewModel: CartViewModel,
     onNavigateToCart: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     val totalItems = cartViewModel.cartTotalItems.value
     val products by productViewModel.products.collectAsState()
-
 
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        // TopAppBar com carrinho
         TopAppBar(
             title = { },
             actions = {
                 IconButton(onClick = { onNavigateToCart() }) {
-                    Row {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = "Carrinho",
@@ -68,6 +71,7 @@ fun HomeScreen(
             }
         )
 
+        // Título da loja
         Text(
             text = "Shop",
             style = MaterialTheme.typography.headlineMedium,
@@ -77,11 +81,11 @@ fun HomeScreen(
             color = Color.Black
         )
 
+        // Lista de produtos
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 150.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 600.dp)
+                .weight(1f) // A lista ocupa o espaço restante disponível
                 .padding(horizontal = 16.dp)
         ) {
             items(products.size) { index ->
@@ -94,10 +98,27 @@ fun HomeScreen(
                 )
             }
         }
+
+        // Botão de logout
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    authViewModel.logout()
+                    onNavigateToLogin()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Terminar Sessão")
+            }
+        }
     }
 }
-
-
 
 @Composable
 fun ProductCard(
@@ -122,7 +143,7 @@ fun ProductCard(
                 contentDescription = product.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp),
+                    .height(150.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -175,6 +196,7 @@ fun ProductCard(
         }
     }
 }
+
 
 
 

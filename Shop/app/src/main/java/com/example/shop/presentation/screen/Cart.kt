@@ -21,6 +21,7 @@ import com.example.shop.presentation.viewmodel.ProductViewModel
 fun CartScreen(
     productViewModel: ProductViewModel,
     cartViewModel: CartViewModel,
+    onNavigateToPay: () -> Unit
 ) {
     val products by productViewModel.products.collectAsState()
     val cartItems = cartViewModel.cartItems
@@ -83,7 +84,7 @@ fun CartScreen(
                 Text("Limpar Carrinho")
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = { /* Avançar para o pagamento */ }, modifier = Modifier.weight(1f)) {
+            Button(onClick = { onNavigateToPay() }, modifier = Modifier.weight(1f)) {
                 Text("Avançar")
             }
         }

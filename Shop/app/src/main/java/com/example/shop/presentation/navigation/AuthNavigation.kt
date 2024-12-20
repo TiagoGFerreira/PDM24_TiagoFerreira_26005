@@ -2,6 +2,7 @@ package com.example.shop.data.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +13,7 @@ import com.example.shop.presentation.viewmodel.AuthViewModel
 import com.example.shop.data.repository.AuthState
 import com.example.shop.presentation.screen.CartScreen
 import com.example.shop.presentation.screen.HomeScreen
+import com.example.shop.presentation.screen.PayScreen
 import com.example.shop.presentation.viewmodel.ProductViewModel
 import com.example.shop.presentation.viewmodel.CartViewModel
 
@@ -47,15 +49,22 @@ fun AuthNavigation(
 
         composable("home") {
             HomeScreen(
+                authViewModel = authViewModel,
                 productViewModel = productViewModel,
                 cartViewModel = cartViewModel,
                 onNavigateToCart = { navController.navigate("cart")},
+                onNavigateToLogin = { navController.navigate("login") }
             )
         }
         composable("cart"){
             CartScreen(
                 productViewModel = productViewModel,
                 cartViewModel = cartViewModel,
+                onNavigateToPay = { navController.navigate("pay")}
+            )
+        }
+        composable("pay"){
+            PayScreen(
             )
         }
     }
