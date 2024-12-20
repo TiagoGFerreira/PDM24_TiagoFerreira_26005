@@ -26,8 +26,7 @@ fun AuthNavigation(
 
     NavHost(navController = navController, startDestination = when (authState) {
         is AuthState.Authenticated -> "home"
-        is AuthState.Unauthenticated -> "login"
-        is AuthState.Error -> "login"
+        else -> "login"
     }) {
 
         composable("login") {

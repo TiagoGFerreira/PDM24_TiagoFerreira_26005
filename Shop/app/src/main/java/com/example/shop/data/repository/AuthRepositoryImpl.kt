@@ -9,11 +9,11 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    init {
-        checkAuthStatus()
-    }
+   // init {
+       // checkAuthStatus()
+   // }
 
-    private fun checkAuthStatus(): AuthState {
+    override fun checkAuthStatus(): AuthState {
         return if (auth.currentUser == null) {
             AuthState.Unauthenticated
         } else {

@@ -16,7 +16,7 @@ class AuthViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
-    private val _authState = MutableStateFlow<AuthState>(AuthState.Unauthenticated)
+    private val _authState = MutableStateFlow<AuthState>(repository.checkAuthStatus())
     val authState: StateFlow<AuthState> = _authState
 
     fun login(email: String, password: String) {
@@ -25,7 +25,7 @@ class AuthViewModel @Inject constructor(
                 val state = repository.loginUser(email, password)
                 _authState.value = state
             } catch (e: Exception) {
-                _authState.value = AuthState.Error("Erro ao realizar login: ${e.message}")
+                _authState.value = AuthState.Error("Erro ao realizar login")
             }
         }
     }
@@ -36,7 +36,7 @@ class AuthViewModel @Inject constructor(
                 val state = repository.registerUser(email, password)
                 _authState.value = state
             } catch (e: Exception) {
-                _authState.value = AuthState.Error("Erro ao realizar registro: ${e.message}")
+                _authState.value = AuthState.Error("Erro ao realizar registro")
             }
         }
     }
