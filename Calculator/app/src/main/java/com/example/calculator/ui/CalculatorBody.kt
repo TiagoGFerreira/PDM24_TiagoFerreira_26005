@@ -3,7 +3,6 @@ package com.example.calculator.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,14 +12,15 @@ import com.example.calculator.Models.CalculatorBrain
 @Composable
 fun CalculatorBody(brain: CalculatorBrain) {
     Column(
-        modifier = Modifier.padding(2.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = with(Modifier) { fillMaxWidth() }
+            .padding(top=350.dp, start = 2.dp,end= 2.dp)
     ) {
         CalculatorScreen(displayValue = brain.displayValue)
 
         Column(
-            modifier = Modifier.fillMaxHeight().weight(14f)
+            modifier = Modifier
+                  .fillMaxHeight()
+                .weight(14f) // Isso controla o tamanho da área dos botões
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -28,19 +28,19 @@ fun CalculatorBody(brain: CalculatorBrain) {
             ) {
                 CalculatorButton(
                     text = "MRC",
-                    onClick = { },
+                    onClick = { brain.recallMemory() },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White),
                     modifier = Modifier.weight(1f)
                 )
                 CalculatorButton(
                     text = "M-",
-                    onClick = { },
+                    onClick = { brain.subtractFromMemory() },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White),
                     modifier = Modifier.weight(1f)
                 )
                 CalculatorButton(
                     text = "M+",
-                    onClick = { },
+                    onClick = { brain.addToMemory() },
                     backGroundColors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White),
                     modifier = Modifier.weight(1f)
                 )
@@ -214,6 +214,7 @@ fun CalculatorBody(brain: CalculatorBrain) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

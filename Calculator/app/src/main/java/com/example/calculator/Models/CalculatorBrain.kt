@@ -1,6 +1,7 @@
 package com.example.calculator.Models
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlin.math.sqrt
@@ -9,16 +10,19 @@ object CalculatorBrain {
 
     var displayValue by mutableStateOf("0")
     var currentValue by mutableStateOf("")
-    var operation by mutableStateOf("")
-    var isNewValue by mutableStateOf(false)
-    var isNewList by mutableStateOf(false)
-    var values by mutableStateOf(emptyList<String>())
-    var operations by mutableStateOf(emptyList<String>())
-    val mutableValues = values.toMutableList()
-    val mutableOperations = operations.toMutableList()
-
+    private var operation by mutableStateOf("")
+    private var isNewValue by mutableStateOf(false)
+    private var isNewList by mutableStateOf(false)
+    private var values by mutableStateOf(emptyList<String>())
+    private var operations by mutableStateOf(emptyList<String>())
+    private val mutableValues = values.toMutableList()
+    private val mutableOperations = operations.toMutableList()
+    private var memoryValue by mutableDoubleStateOf(0.0)
 
     fun onButtonClick(value: String) {
+        if (value == "." && currentValue.contains(".")) {
+            return
+        }
         if (displayValue == "0" && value != ".") {
             displayValue = value
             currentValue = value
@@ -55,6 +59,12 @@ object CalculatorBrain {
                 mutableOperations.clear()
                 isNewList = false
             }
+
+            if (operation.isNotEmpty()) {
+                displayValue = "0"
+                currentValue = ""
+            }
+
             mutableOperations.add(op)
             mutableValues.add(currentValue)
             values = mutableValues
@@ -105,5 +115,27 @@ object CalculatorBrain {
         }
         currentValue = result.toString()
         isNewList = true
+    }
+
+    fun addToMemory() {
+        memoryValue += displayValue.toDouble()
+    }
+
+    fun subtractFromMemory() {
+        memoryValue -= displayValue.toDouble()
+    }
+
+    fun recallMemory() {
+        if (memoryValue.toInt() != 0) {
+            val result = memoryValue
+
+            displayValue = if (result % 1 == 0.0) {
+                result.toInt().toString()
+            } else {
+                result.toString()
+            }
+        } else {
+            displayValue = "0"
+        }
     }
 }

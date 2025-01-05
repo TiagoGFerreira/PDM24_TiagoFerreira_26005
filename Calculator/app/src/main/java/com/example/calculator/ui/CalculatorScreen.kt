@@ -17,7 +17,7 @@ fun CalculatorScreen(displayValue: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(1.dp),
-        contentAlignment = Alignment.CenterEnd
+        contentAlignment = Alignment.TopEnd
     ) {
         Text(
             text = displayValue,
