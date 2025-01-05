@@ -1,22 +1,20 @@
 package com.example.shop.presentation.screen
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.shop.domain.model.CartItem
 import com.example.shop.presentation.viewmodel.CartViewModel
 import com.example.shop.presentation.viewmodel.ProductViewModel
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CartScreen(
     productViewModel: ProductViewModel,
@@ -24,16 +22,21 @@ fun CartScreen(
     onNavigateToPay: () -> Unit
 ) {
     val products by productViewModel.products.collectAsState()
-    val cartItems = cartViewModel.cartItems
+    val cartItems by cartViewModel.cartItems.collectAsState()
     val userEmail = remember { mutableStateOf("") }
+    val totalPrice = remember(products, cartItems) {
+        cartViewModel.calculateCartTotal(products)
+    }
     var reloadTrigger by remember { mutableStateOf(false) }
 
-    LaunchedEffect(reloadTrigger) { // Executa sempre que reloadTrigger muda
+    LaunchedEffect(reloadTrigger) {
         cartViewModel.getCartItems()
+        cartViewModel.getTotalItemsInCart()
+        cartViewModel.calculateCartTotal(products)
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Text("Carrinho", style = MaterialTheme.typography.headlineMedium)
+        Text("Cart", style = MaterialTheme.typography.headlineMedium)
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(cartItems) { cartItem ->
@@ -42,13 +45,30 @@ fun CartScreen(
                     CartItemRow(
                         productName = it.name,
                         quantity = cartItem.quantity,
-                        onRemove = { cartViewModel.removeProductFromCart(cartItem.id) }
+                        onRemove = {
+                            cartViewModel.removeProductFromCart(cartItem.id)
+                        }
                     )
                 }
             }
         }
 
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Total:", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "${String.format("%.2f", totalPrice)} €",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "Use cart from your friend:",
             style = MaterialTheme.typography.bodyMedium,
@@ -78,19 +98,17 @@ fun CartScreen(
             Text("Add friend's cart")
         }
 
-
         Row(modifier = Modifier.padding(16.dp)) {
             Button(onClick = { cartViewModel.clearCart() }, modifier = Modifier.weight(1f)) {
-                Text("Limpar Carrinho")
+                Text("Clear Cart")
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = { onNavigateToPay() }, modifier = Modifier.weight(1f)) {
-                Text("Avançar")
+                Text("Advance")
             }
         }
     }
 }
-
 
 @Composable
 fun CartItemRow(
@@ -115,7 +133,8 @@ fun CartItemRow(
         }
 
         IconButton(onClick = onRemove) {
-            Icon(Icons.Default.Delete, contentDescription = "Remover")
+            Icon(Icons.Default.Delete, contentDescription = "Remove")
         }
     }
 }
+

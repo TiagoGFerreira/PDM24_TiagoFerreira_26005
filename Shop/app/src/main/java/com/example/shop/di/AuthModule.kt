@@ -1,4 +1,4 @@
-package com.example.shop.data.di
+package com.example.shop.di
 
 import com.example.shop.domain.repository.AuthRepository
 import com.example.shop.data.repository.AuthRepositoryImpl

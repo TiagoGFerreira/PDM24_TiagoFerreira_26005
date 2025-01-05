@@ -1,5 +1,6 @@
 package com.example.shop.data.repository
 
+import com.example.shop.data.model.users.UserDTO
 import com.example.shop.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
@@ -9,10 +10,6 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-   // init {
-       // checkAuthStatus()
-   // }
-
     override fun checkAuthStatus(): AuthState {
         return if (auth.currentUser == null) {
             AuthState.Unauthenticated
@@ -21,27 +18,18 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepository {
         }
     }
 
-    override suspend fun registerUser(email: String, password: String): AuthState {
-        if (email.isEmpty() || password.isEmpty()) {
-            return AuthState.Error("Email or password cannot be empty")
-        }
-
+    override suspend fun registerUser(userDTO: UserDTO): AuthState {
         return try {
-            auth.createUserWithEmailAndPassword(email, password)
-                .await() // Espera a resposta da operação
+            auth.createUserWithEmailAndPassword(userDTO.email, userDTO.password).await()
             AuthState.Authenticated
         } catch (e: Exception) {
             AuthState.Error(e.message ?: "Unexpected error occurred")
         }
     }
 
-    override suspend fun loginUser(email: String, password: String): AuthState {
-        if (email.isEmpty() || password.isEmpty()) {
-            return AuthState.Error("Email or password cannot be empty")
-        }
-
+    override suspend fun loginUser(userDTO: UserDTO): AuthState {
         return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val result = auth.signInWithEmailAndPassword(userDTO.email, userDTO.password).await()
             if (result.user != null) {
                 AuthState.Authenticated
             } else {

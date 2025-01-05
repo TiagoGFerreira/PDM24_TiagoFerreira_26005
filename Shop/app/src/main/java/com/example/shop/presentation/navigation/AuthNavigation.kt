@@ -1,14 +1,13 @@
-package com.example.shop.data.nav
+package com.example.shop.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.shop.presentation.view.LoginScreen
-import com.example.shop.presentation.view.RegisterScreen
+import com.example.shop.presentation.screen.LoginScreen
+import com.example.shop.presentation.screen.RegisterScreen
 import com.example.shop.presentation.viewmodel.AuthViewModel
 import com.example.shop.data.repository.AuthState
 import com.example.shop.presentation.screen.CartScreen

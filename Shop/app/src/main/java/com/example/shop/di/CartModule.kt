@@ -1,8 +1,6 @@
-package com.example.shop.data.di
+package com.example.shop.di
 
-import com.example.shop.data.repository.AuthRepositoryImpl
 import com.example.shop.data.repository.CartRepositoryImpl
-import com.example.shop.domain.repository.AuthRepository
 import com.example.shop.domain.repository.CartRepository
 import dagger.Module
 import dagger.Provides

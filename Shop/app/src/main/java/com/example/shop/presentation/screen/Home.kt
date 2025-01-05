@@ -33,16 +33,20 @@ fun HomeScreen(
     onNavigateToCart: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val totalItems = cartViewModel.cartTotalItems.value
+    val totalItems by cartViewModel.cartTotalItems.collectAsState()
     val products by productViewModel.products.collectAsState()
+    val reloadTrigger by remember { mutableStateOf(false) }
+
+    LaunchedEffect(reloadTrigger) {
+        cartViewModel.getTotalItemsInCart()
+    }
+
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        // TopAppBar com carrinho
         TopAppBar(
-            title = { },
+            title = { Text("Home") },
             actions = {
                 IconButton(onClick = { onNavigateToCart() }) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -71,35 +75,24 @@ fun HomeScreen(
             }
         )
 
-        // Título da loja
-        Text(
-            text = "Shop",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            color = Color.Black
-        )
 
-        // Lista de produtos
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 150.dp),
             modifier = Modifier
-                .weight(1f) // A lista ocupa o espaço restante disponível
+                .weight(1f)
                 .padding(horizontal = 16.dp)
         ) {
             items(products.size) { index ->
                 val product = products[index]
                 ProductCard(
                     product = product,
-                    onAddToCart = { product, quantity ->
-                        cartViewModel.addProductToCart(product, quantity)
+                    onAddToCart = { p, quantity ->
+                        cartViewModel.addProductToCart(p, quantity)
                     }
                 )
             }
         }
 
-        // Botão de logout
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
@@ -111,10 +104,11 @@ fun HomeScreen(
                 onClick = {
                     authViewModel.logout()
                     onNavigateToLogin()
+                    cartViewModel.resetCartState()
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Terminar Sessão")
+                Text("Log Out")
             }
         }
     }
@@ -125,7 +119,7 @@ fun ProductCard(
     product: Product,
     onAddToCart: (Product, Int) -> Unit
 ) {
-    var quantity by remember { mutableStateOf(1) }
+    var quantity by remember { mutableIntStateOf(1) }
 
     Card(
         modifier = Modifier
@@ -197,15 +191,8 @@ fun ProductCard(
     }
 }
 
-
-
-
 @SuppressLint("RememberReturnType")
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
 }
-
-
-
-

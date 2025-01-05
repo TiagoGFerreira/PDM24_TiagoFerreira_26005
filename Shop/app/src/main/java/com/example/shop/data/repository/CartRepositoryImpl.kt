@@ -41,7 +41,6 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                     userCartRef.set(newCart).await()
                 }
             } catch (_: Exception) {
-                // Ignorar erros
             }
         }
     }
@@ -64,12 +63,11 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                     }
                 }
             } catch (_: Exception) {
-                // Ignorar erros
             }
         }
     }
 
-    override suspend fun clearCart(cartModel: Cart) {
+    override suspend fun clearCart(cart: Cart) {
         userEmail?.let { email ->
             val userCartRef = db.collection("cart").document(email)
 
@@ -80,7 +78,6 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                     userCartRef.update("products", mutableListOf<CartItem>()).await()
                 }
             } catch (_: Exception) {
-                // Ignorar erros
             }
         }
     }
@@ -118,20 +115,19 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
         } ?: emptyList()
     }
 
-    override suspend fun shareCartIems(emailOtherUser: String, cartModel: Cart) {
-        userEmail?.let { email ->
+    override suspend fun shareCartIems(emailOtherUser: String, cart: Cart) {
+        userEmail?.let {
             try {
-                val snapshot = cart.document(emailOtherUser).get().await()
+                val snapshot = this.cart.document(emailOtherUser).get().await()
 
                 if (snapshot.exists()) {
                     val cartItems: List<CartItem> = snapshot.toObject(Cart::class.java)?.products.orEmpty()
-                    clearCart(cartModel)
+                    clearCart(cart)
                     cartItems.forEach { item ->
                         addItemCart(item)
                     }
                 }
             } catch (_: Exception) {
-                // Ignorar erros
             }
         }
     }

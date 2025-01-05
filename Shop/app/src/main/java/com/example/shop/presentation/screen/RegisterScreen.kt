@@ -1,4 +1,4 @@
-package com.example.shop.presentation.view
+package com.example.shop.presentation.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -27,7 +27,7 @@ fun RegisterScreen(
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Error) {
-            errorMessage = "Registration failed: ${(authState as AuthState.Error).message}"
+            errorMessage = "Registration failed: ${authState.message}"
             isLoading = false
 
             kotlinx.coroutines.delay(3000)

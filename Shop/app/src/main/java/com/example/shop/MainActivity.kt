@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.shop.data.nav.AuthNavigation
+import com.example.shop.presentation.navigation.AuthNavigation
 import com.example.shop.presentation.viewmodel.AuthViewModel
 import com.example.shop.presentation.viewmodel.ProductViewModel
 import com.example.shop.presentation.viewmodel.CartViewModel
