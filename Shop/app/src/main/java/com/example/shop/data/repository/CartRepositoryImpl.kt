@@ -1,5 +1,6 @@
 package com.example.shop.data.repository
 
+import android.util.Log
 import com.example.shop.domain.model.Cart
 import com.example.shop.domain.model.CartItem
 import com.example.shop.domain.repository.CartRepository
@@ -40,7 +41,8 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                     val newCart = Cart(email, listOf(cartItem))
                     userCartRef.set(newCart).await()
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.e("CartRepository", "Error adding item to cart: ${e.message}", e)
             }
         }
     }
@@ -61,8 +63,15 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                         productsList.remove(productToRemove)
                         userCartRef.update("products", productsList).await()
                     }
+                    else{
+                        Log.e("CartRepository", "Product does not exist")
+                    }
                 }
-            } catch (_: Exception) {
+                else{
+                    Log.e("CartRepository", "Cart does not exist")
+                }
+            } catch (e: Exception) {
+                Log.e("CartRepository", "Error removing item from cart: ${e.message}", e)
             }
         }
     }
@@ -127,7 +136,11 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                         addItemCart(item)
                     }
                 }
-            } catch (_: Exception) {
+                else{
+                    Log.e("CartRepository", "Cart does not exist")
+                }
+            } catch (e: Exception) {
+                Log.e("CartRepository", "Error sharing cart items: ${e.message}", e)
             }
         }
     }
