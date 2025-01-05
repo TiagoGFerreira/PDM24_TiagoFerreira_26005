@@ -1,8 +1,4 @@
-package com.example.nytimes.domain.model
-
-data class NewsDetailList(
-    val news: List<NewsDetail>
-)
+package com.example.nytimes.domain.model.single_news
 
 data class NewsDetail(
     val id: Int,

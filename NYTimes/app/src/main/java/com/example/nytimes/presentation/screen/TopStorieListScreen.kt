@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.nytimes.domain.model.NewsItem
+import com.example.nytimes.domain.model.top_news.NewsItem
 import com.example.nytimes.presentation.viewModel.TopStorieListViewModel
 
 @Composable

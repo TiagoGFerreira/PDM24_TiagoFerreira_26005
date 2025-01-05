@@ -2,8 +2,8 @@ package com.example.nytimes.data.repository
 
 import com.example.nytimes.data.remote.api.TopStoriesApi
 import com.example.nytimes.domain.repository.TopStorieRepository
-import com.example.nytimes.domain.model.NewsDetail
-import com.example.nytimes.domain.model.NewsItem
+import com.example.nytimes.domain.model.single_news.NewsDetail
+import com.example.nytimes.domain.model.top_news.NewsItem
 
 
 class TopStorieRepositoryImpl (private val api: TopStoriesApi) : TopStorieRepository {

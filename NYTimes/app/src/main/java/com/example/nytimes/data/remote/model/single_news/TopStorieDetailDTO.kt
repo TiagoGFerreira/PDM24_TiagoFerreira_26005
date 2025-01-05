@@ -1,6 +1,6 @@
-package com.example.nytimes.data.remote.model
+package com.example.nytimes.data.remote.model.single_news
 
-import com.example.nytimes.domain.model.NewsDetail
+import com.example.nytimes.domain.model.single_news.NewsDetail
 
 data class TopStorieDetailDTO(
     val id: Int,
@@ -26,6 +26,4 @@ data class TopStorieDetailDTO(
     }
 }
 
-data class SingleNewsItemDTO(
-    val news: List<TopStorieDetailDTO>
-)
+

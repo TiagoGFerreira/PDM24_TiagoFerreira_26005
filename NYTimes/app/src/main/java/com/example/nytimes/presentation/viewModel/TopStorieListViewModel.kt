@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nytimes.data.remote.api.RetrofitInstance
 import com.example.nytimes.data.repository.TopStorieRepositoryImpl
-import com.example.nytimes.domain.model.NewsItem
+import com.example.nytimes.domain.model.top_news.NewsItem
 import com.example.nytimes.domain.use_case.GetTopStoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

@@ -1,7 +1,7 @@
 package com.example.nytimes.data.remote.api
 
-import com.example.nytimes.data.remote.model.SingleNewsItemDTO
-import com.example.nytimes.domain.model.TopNewsResponse
+import com.example.nytimes.data.remote.model.single_news.SingleNewsItemDTO
+import com.example.nytimes.domain.model.top_news.TopNewsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
