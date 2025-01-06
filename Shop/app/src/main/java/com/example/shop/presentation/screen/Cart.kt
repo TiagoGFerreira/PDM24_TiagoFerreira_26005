@@ -40,7 +40,7 @@ fun CartScreen(
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(cartItems) { cartItem ->
-                val product = products.find { it.id == cartItem.id }
+                val product = products.find { it.id == cartItem.id.toString() }
                 product?.let {
                     CartItemRow(
                         productName = it.name,

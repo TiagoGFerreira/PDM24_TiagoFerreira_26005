@@ -50,7 +50,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeProductFromCart(productId: Int) {
+    fun removeProductFromCart(productId: String) {
         viewModelScope.launch {
             val cartItem = _cartItems.value.find { it.id == productId }
             cartItem?.let {

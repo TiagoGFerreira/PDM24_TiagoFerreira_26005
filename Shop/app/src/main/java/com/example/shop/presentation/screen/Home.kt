@@ -133,7 +133,7 @@ fun ProductCard(
             modifier = Modifier.padding(16.dp)
         ) {
             AsyncImage(
-                model = product.image,
+                model = product.imageUrl,
                 contentDescription = product.name,
                 modifier = Modifier
                     .fillMaxWidth()

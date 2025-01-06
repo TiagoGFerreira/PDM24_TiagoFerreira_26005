@@ -1,8 +1,8 @@
 package com.example.shop.domain.model
 
 data class Product(
-    val id: Int,
-    val name: String,
-    val price: Double,
-    val image: String
+    val id: String = "",
+    val name: String = "",
+    val price: Double = 0.0,
+    val imageUrl: String = ""
 )
