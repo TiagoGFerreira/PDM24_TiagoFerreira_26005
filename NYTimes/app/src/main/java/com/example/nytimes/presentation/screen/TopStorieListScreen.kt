@@ -50,10 +50,10 @@ fun TopStorieListScreen(viewModel: TopStorieListViewModel, source : String, lang
             LazyColumn {
                 items(stories) { story ->
                     TopStorieItem(story = story, onClick = { onItemClick(story.id) })
-                    Divider(
-                        color = Color.LightGray,
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp),
                         thickness = 1.dp,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        color = Color.LightGray
                     )
                 }
             }
@@ -78,7 +78,7 @@ fun TopStorieItem(story: NewsItem, onClick: () -> Unit) {
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
-        if (story.author.isNotBlank()) {
+        if (!story.author.isNullOrBlank()) {
             Text(
                 text = "By ${story.author}",
                 style = MaterialTheme.typography.bodySmall.copy(
@@ -88,6 +88,7 @@ fun TopStorieItem(story: NewsItem, onClick: () -> Unit) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
+
 
         if (!story.summary.isNullOrBlank()) {
             Text(
