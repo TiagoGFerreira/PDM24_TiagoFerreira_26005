@@ -10,9 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.shop.presentation.viewmodel.CartViewModel
 import com.example.shop.presentation.viewmodel.ProductViewModel
+import kotlinx.coroutines.delay
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -21,6 +23,7 @@ fun CartScreen(
     cartViewModel: CartViewModel,
     onNavigateToPay: () -> Unit
 ) {
+    val message by cartViewModel.shareCartMessage.collectAsState()
     val products by productViewModel.products.collectAsState()
     val cartItems by cartViewModel.cartItems.collectAsState()
     val userEmail = remember { mutableStateOf("") }
@@ -28,6 +31,7 @@ fun CartScreen(
         cartViewModel.calculateCartTotal(products)
     }
     var reloadTrigger by remember { mutableStateOf(false) }
+    var showMessage by remember { mutableStateOf(false) }
 
     LaunchedEffect(reloadTrigger) {
         cartViewModel.getCartItems()
@@ -35,12 +39,20 @@ fun CartScreen(
         cartViewModel.calculateCartTotal(products)
     }
 
+    LaunchedEffect(message) {
+        if (!message.isNullOrEmpty()) {
+            showMessage = true
+            delay(3000)
+            showMessage = false
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Cart", style = MaterialTheme.typography.headlineMedium)
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(cartItems) { cartItem ->
-                val product = products.find { it.id == cartItem.id.toString() }
+                val product = products.find { it.id == cartItem.id }
                 product?.let {
                     CartItemRow(
                         productName = it.name,
@@ -96,6 +108,16 @@ fun CartScreen(
                 .padding(16.dp)
         ) {
             Text("Add friend's cart")
+        }
+
+        if (showMessage) {
+            message?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
 
         Row(modifier = Modifier.padding(16.dp)) {

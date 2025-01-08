@@ -37,6 +37,9 @@ class CartViewModel @Inject constructor(
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> get() = _cartItems
 
+    private val _shareCartMessage = MutableStateFlow<String?>(null)
+    val shareCartMessage: StateFlow<String?> get() = _shareCartMessage
+
     init {
         getCartItems()
         getTotalItemsInCart()
@@ -87,10 +90,18 @@ class CartViewModel @Inject constructor(
 
     fun shareCartItems(userEmail: String) {
         viewModelScope.launch {
-            shareCartItemsUseCase(userEmail, _cart.value)
-            getCartItems()
-            getTotalItemsInCart()
+            try {
+                shareCartItemsUseCase(userEmail)
+                _shareCartMessage.value = shareCartItemsUseCase(userEmail)
+            } catch (e: Exception) {
+                _shareCartMessage.value = shareCartItemsUseCase(userEmail)
+            }
         }
+    }
+
+
+    fun resetShareCartMessage() {
+        _shareCartMessage.value = null
     }
 
     fun resetCartState() {

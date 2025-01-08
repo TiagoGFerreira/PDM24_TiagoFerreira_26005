@@ -9,5 +9,5 @@ interface CartRepository{
     suspend fun clearCart(cart: Cart)
     suspend fun getTotalItems(): Int
     suspend fun getCartItems(): List<CartItem>
-    suspend fun shareCartIems(emailOtherUser: String, cart: Cart)
+    suspend fun shareCartItems(emailOtherUser: String): String
 }

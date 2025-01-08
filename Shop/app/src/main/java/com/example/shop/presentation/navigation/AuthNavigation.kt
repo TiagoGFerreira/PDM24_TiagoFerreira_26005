@@ -63,7 +63,8 @@ fun AuthNavigation(
             )
         }
         composable("pay"){
-            PayScreen(
+            PayScreen(cartViewModel = cartViewModel,
+                onNavigateToHome = { navController.navigate("home")}
             )
         }
     }

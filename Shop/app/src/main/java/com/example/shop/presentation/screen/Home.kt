@@ -41,7 +41,6 @@ fun HomeScreen(
         cartViewModel.getTotalItemsInCart()
     }
 
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -77,7 +76,7 @@ fun HomeScreen(
 
 
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 150.dp),
+            columns = GridCells.Adaptive(minSize = 160.dp),
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp)
@@ -86,9 +85,7 @@ fun HomeScreen(
                 val product = products[index]
                 ProductCard(
                     product = product,
-                    onAddToCart = { p, quantity ->
-                        cartViewModel.addProductToCart(p, quantity)
-                    }
+                    onAddToCart = { p, quantity -> cartViewModel.addProductToCart(p, quantity) }
                 )
             }
         }

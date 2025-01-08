@@ -7,9 +7,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shop.presentation.viewmodel.CartViewModel
 
 @Composable
 fun PayScreen(
+    cartViewModel: CartViewModel,
+    onNavigateToHome: () -> Unit
 ) {
     var selectedOption by remember { mutableStateOf("Credit Card") }
     val paymentOptions = listOf("Credit Card", "PayPal", "Google Pay")
@@ -27,7 +30,6 @@ fun PayScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Radio buttons for payment options
         paymentOptions.forEach { option ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -44,16 +46,16 @@ fun PayScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Confirm payment button
+
         Button(
-            onClick = {  },
+            onClick = { cartViewModel.clearCart()
+                onNavigateToHome()  },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Confirm Payment")
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun PayScreenPreview() {

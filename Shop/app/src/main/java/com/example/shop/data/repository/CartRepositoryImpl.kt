@@ -1,6 +1,5 @@
 package com.example.shop.data.repository
 
-import android.util.Log
 import com.example.shop.domain.model.Cart
 import com.example.shop.domain.model.CartItem
 import com.example.shop.domain.repository.CartRepository
@@ -41,8 +40,7 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                     val newCart = Cart(email, listOf(cartItem))
                     userCartRef.set(newCart).await()
                 }
-            } catch (e: Exception) {
-                Log.e("CartRepository", "Error adding item to cart: ${e.message}", e)
+            } catch (_: Exception) {
             }
         }
     }
@@ -63,15 +61,8 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
                         productsList.remove(productToRemove)
                         userCartRef.update("products", productsList).await()
                     }
-                    else{
-                        Log.e("CartRepository", "Product does not exist")
-                    }
                 }
-                else{
-                    Log.e("CartRepository", "Cart does not exist")
-                }
-            } catch (e: Exception) {
-                Log.e("CartRepository", "Error removing item from cart: ${e.message}", e)
+            } catch (_: Exception) {
             }
         }
     }
@@ -124,24 +115,38 @@ class CartRepositoryImpl @Inject constructor() : CartRepository {
         } ?: emptyList()
     }
 
-    override suspend fun shareCartIems(emailOtherUser: String, cart: Cart) {
-        userEmail?.let {
-            try {
-                val snapshot = this.cart.document(emailOtherUser).get().await()
+    override suspend fun shareCartItems(emailOtherUser: String): String {
+        val currentUserEmail = userEmail
+        if (currentUserEmail.isNullOrEmpty()) {
+            return "User email is null or empty."
+        }
 
-                if (snapshot.exists()) {
-                    val cartItems: List<CartItem> = snapshot.toObject(Cart::class.java)?.products.orEmpty()
-                    clearCart(cart)
-                    cartItems.forEach { item ->
-                        addItemCart(item)
-                    }
-                }
-                else{
-                    Log.e("CartRepository", "Cart does not exist")
-                }
-            } catch (e: Exception) {
-                Log.e("CartRepository", "Error sharing cart items: ${e.message}", e)
+        try {
+            val otherUserSnapshot = cart.document(emailOtherUser).get().await()
+
+            if (!otherUserSnapshot.exists()) {
+                return "The specified user does not exist."
             }
+
+            val currentUserCartSnapshot = cart.document(currentUserEmail).get().await()
+
+            if (!currentUserCartSnapshot.exists()) {
+                return "Current user cart does not exist."
+            }
+
+            val currentUserCartItems = currentUserCartSnapshot.toObject(Cart::class.java)?.products.orEmpty()
+
+            if (currentUserCartItems.isEmpty()) {
+                return "Current user cart is empty or null."
+            }
+
+            val otherUserCartRef = cart.document(emailOtherUser)
+            otherUserCartRef.update("products", currentUserCartItems).await()
+
+            return "Cart successfully shared to $emailOtherUser."
+
+        } catch (e: Exception) {
+            return "Error sharing cart items: ${e.message}"
         }
     }
 }
