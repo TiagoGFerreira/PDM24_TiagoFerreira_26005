@@ -20,7 +20,7 @@ fun CalculatorBody(brain: CalculatorBrain) {
         Column(
             modifier = Modifier
                   .fillMaxHeight()
-                .weight(14f) // Isso controla o tamanho da área dos botões
+                .weight(14f)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
